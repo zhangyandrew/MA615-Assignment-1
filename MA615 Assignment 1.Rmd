@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r }
-#install.packages("kableExtra")
+install.packages("kableExtra", repos = "https://cran.us.r-project.org")
 library(knitr)
 library(data.table)
 library(kableExtra)
