@@ -1,0 +1,71 @@
+---
+title: "MA615 Assignment 1"
+author: "Andrew Zhang"
+date: "9/12/2018"
+output: pdf_document
+---
+
+```{r }
+#install.packages("kableExtra")
+library(knitr)
+library(data.table)
+library(kableExtra)
+
+## Poisson Distribution
+data <- c()
+lambda <- 2
+for (r in seq(0:100)){
+  poisson_1 <- lambda ^ r * exp(-lambda)/factorial(r)
+  data <- rbind(data, data.frame(r, poisson_1))
+}
+
+## Probability more than k missprints on any page
+set.seed(123)
+
+## Set number of pages and number of misprints
+n = 50
+k = 25
+
+## Create matrix nxk
+page_rel <- matrix(0, nrow = n, ncol = k)
+for (i in seq(0, n)){
+  for (j in seq(0, k)){
+    pois <- dpois(j, 2)
+    page_rel[i, j] <- pbinom(i, n, pois)
+  }
+}
+
+## Convert matrix to a table
+page_tab <- data.table(page_rel)
+colnames(page_tab) <- as.character(seq(1:25))
+
+## Presentable table
+kable(page_rel, "latex", booktabs = "T", col.names = as.character(seq(1:25))) %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+# Solution
+
+$P[Y = r] = \frac{{e^{ - \lambda } \lambda ^ r }}{{r!}}$
+
+The probability of k missprints on any given page will be:
+
+$P = 1 - P[Y \leq k]$ 
+
+$p = 1 - \sum{\frac{{e^{ - \lambda } \lambda ^ r }}{{r!}}}$
+
+Then we can apply the binomial distribution to determine how many pages will have more than k misprints. Let Y denote the number of pages out of 50 that contain more than k misprints. 
+
+Y ~ Binomial(n,p)
+
+$P[Y \geq m] = \sum{{{50}\choose{b}} p ^ b (1 - p) ^ {50-b}}$
+
+and
+
+$p = 1 - \sum{\frac{{e^{ - \lambda } \lambda ^ r }}{{r!}}}$
+
+
+```{r image}
+## Download image from repository and place in same working directory
+include_graphics("Book Image.jpg")
+```
